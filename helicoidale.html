@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liaison HÉLICOÏDALE - p5.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f8f8f8;
+    }
+
+    h1 { margin: 20px 0 10px; color: #333; }
+    h2 { margin: 0; color: #333; }
+
+    .nav-buttons {
+      margin-top: 20px;
+    }
+
+    .nav-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #45a049;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .controls {
+      margin: 30px auto;
+      width: 500px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+    }
+
+    td, th {
+      border: 1px solid #aaa;
+      padding: 10px 15px;
+    }
+
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Liaison HÉLICOÏDALE</h1>
+  <h2>Dr. Mohamed Sofiane BENDILMI</h2>
+
+  <div class="nav-buttons">
+    <button onclick="window.location.href='pivot.html'">PIVOT</button>
+    <button onclick="window.location.href='glissiere.html'">GLISSIÈRE</button>
+    <button onclick="window.location.href='helicoidale.html'">HÉLICOÏDALE</button>
+  </div>
+
+  <div class="controls">
+    <label for="rot">Rotation (axe Y)</label>
+    <input type="range" id="rot" min="-180" max="180" value="0">
+  </div>
+
+  <main>
+    <script>
+      function setup() {
+        createCanvas(600, 400, WEBGL);
+        noStroke();
+      }
+
+      function draw() {
+        background(250);
+        directionalLight(255, 255, 255, 0.5, 1, -1);
+        ambientLight(100);
+
+        let angle = radians(document.getElementById('rot').value);
+        let trans = map(angle, -PI, PI, -50, 50);
+
+        // Pièce fixe
+        push();
+        fill(200, 0, 0);
+        cylinder(40, 20);
+        pop();
+
+        // Pièce mobile (hélicoïdale)
+        push();
+        rotateY(angle);
+        translate(0, -trans - 30, 0);
+        fill(50, 254, 134);
+        cylinder(30, 60);
+        pop();
+      }
+    </script>
+  </main>
+
+  <table>
+    <tr>
+      <th>Axe</th>
+      <th>Rotation</th>
+      <th>Translation</th>
+    </tr>
+    <tr>
+      <td>X</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Y (hélicoïdal)</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Z</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liaison PIVOT - p5.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f8f8f8;
+    }
+
+    h1 {
+      margin: 20px 0 10px;
+      color: #333;
+    }
+    h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .nav-buttons {
+      margin-top: 20px;
+    }
+
+    .nav-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #45a049;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .controls {
+      margin: 30px auto;
+      width: 500px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+    }
+
+    td, th {
+      border: 1px solid #aaa;
+      padding: 10px 15px;
+    }
+
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Liaison PIVOT</h1>
+  <h2>Dr. Mohamed Sofiane BENDILMI</h2>
+
+  <!-- Boutons de navigation -->
+  <div class="nav-buttons">
+    <button onclick="window.location.href='pivot.html'">PIVOT</button>
+    <button onclick="window.location.href='glissiere.html'">GLISSIÈRE</button>
+    <button onclick="window.location.href='helicoidale.html'">HÉLICOÏDALE</button>
+  </div>
+
+  <div class="controls">
+    <label for="rotX">Rotation système autour de X</label>
+    <input type="range" id="rotX" min="-180" max="180" value="0">
+    <label for="rotY">Rotation système autour de Y</label>
+    <input type="range" id="rotY" min="-180" max="180" value="0">
+    <label for="rotZ">Rotation système autour de Z</label>
+    <input type="range" id="rotZ" min="-180" max="180" value="0">
+    <label for="rotP">Rotation Pièce 1 sur Pièce 2</label>
+    <input type="range" id="rotP" min="-180" max="180" value="0">
+  </div>
+
+  <main>
+    <script>
+      function setup() {
+        createCanvas(600, 400, WEBGL);
+        noStroke();
+      }
+
+      function drawArrow(axis, length, colorVal) {
+        fill(colorVal);
+        stroke(colorVal);
+        push();
+        if (axis === 'x') {
+          rotateZ(HALF_PI);
+        } else if (axis === 'z') {
+          rotateX(HALF_PI);
+        }
+        cylinder(3, length);
+        translate(0, -length / 2, 0);
+        cone(-8, -20);
+        pop();
+      }
+
+      function draw() {
+        background(250);
+        directionalLight(255, 255, 255, 0.5, 1, -1);
+        ambientLight(100);
+
+        // Lire les valeurs des sliders
+        let rotX = radians(document.getElementById('rotX').value);
+        let rotY = radians(document.getElementById('rotY').value);
+        let rotZ = radians(document.getElementById('rotZ').value);
+        let rotP = radians(document.getElementById('rotP').value);
+
+        // Appliquer la rotation globale
+        rotateX(rotX);
+        rotateY(rotY);
+        rotateZ(rotZ);
+
+        // Repère global centré sur la pièce
+        push();
+        drawArrow('x', 300, color(255, 0, 0));   // X - rouge
+        drawArrow('y', 400, color(0, 255, 0));   // Y - vert
+        drawArrow('z', 200, color(0, 0, 255));   // Z - bleu
+        pop();
+
+        // Pièce verte (mobile)
+        push();
+        rotateY(rotP); // rotation autour de l’axe Y local
+        fill(50, 254, 134);
+        cylinder(50, 100);
+        translate(50, 0 , 0);
+        rotateZ(PI / 2);
+        cylinder(15, 100);
+        pop();
+
+        // Pièce orange (fixe)
+        push();
+        fill(200, 0, 0);
+        rotateY(PI);
+        cylinder(15, 200);
+
+        push();
+        translate(0, 55, 0);
+        cylinder(50, 10);
+        pop();
+
+        push();
+        translate(50, -100, 0);
+        rotateZ(PI / 2);
+        cylinder(15, 100);
+        pop();
+
+        push();
+        translate(0, -100, 0);
+        sphere(15);
+        pop();
+
+        push();
+        translate(0, -55, 0);
+        cylinder(50, 10);
+        pop();
+        pop();
+      }
+    </script>
+  </main>
+
+  <!-- Tableau Degrés de Liberté -->
+  <table>
+    <tr>
+      <th>Axe</th>
+      <th>Rotation</th>
+      <th>Translation</th>
+    </tr>
+    <tr>
+      <td>X</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Y (axe pivot)</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Z</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </table>
+</body>
+</html>
